@@ -5,7 +5,8 @@
 
 import threading
 
-#def main():
+# def main():
+#     ## 线程数，线程池，当前的线程
 #    print(threading.active_count())
 #    print(threading.enumerate()) # see the thread list
 #    print(threading.current_thread())

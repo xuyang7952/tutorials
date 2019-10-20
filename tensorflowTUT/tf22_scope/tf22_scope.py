@@ -30,7 +30,7 @@ with tf.variable_scope("a_variable_scope") as scope:
     var3 = tf.get_variable(name='var3', shape=[1], dtype=tf.float32, initializer=initializer)
     var4 = tf.Variable(name='var4', initial_value=[4], dtype=tf.float32)
     var4_reuse = tf.Variable(name='var4', initial_value=[4], dtype=tf.float32)
-    scope.reuse_variables()
+    scope.reuse_variables() ## 定义变量var3可以重复调用
     var3_reuse = tf.get_variable(name='var3',)
 
 with tf.Session() as sess:

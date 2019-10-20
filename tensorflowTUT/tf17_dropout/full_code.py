@@ -35,12 +35,12 @@ def add_layer(inputs, in_size, out_size, layer_name, activation_function=None, )
     return outputs
 
 
-# define placeholder for inputs to network
+# define placeholder for inputs to network，keep_prob代表着抽样比例，
 keep_prob = tf.placeholder(tf.float32)
 xs = tf.placeholder(tf.float32, [None, 64])  # 8x8
 ys = tf.placeholder(tf.float32, [None, 10])
 
-# add output layer
+# add output layer，输入层：xs，隐藏层：l1，输出层：prediction
 l1 = add_layer(xs, 64, 50, 'l1', activation_function=tf.nn.tanh)
 prediction = add_layer(l1, 50, 10, 'l2', activation_function=tf.nn.softmax)
 
@@ -52,18 +52,16 @@ train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
 sess = tf.Session()
 merged = tf.summary.merge_all()
-# summary writer goes in here
+
+# summary writer goes in here，记录结果，
 train_writer = tf.summary.FileWriter("logs/train", sess.graph)
 test_writer = tf.summary.FileWriter("logs/test", sess.graph)
 
 # tf.initialize_all_variables() no long valid from
 # 2017-03-02 if using tensorflow >= 0.12
-if int((tf.__version__).split('.')[1]) < 12 and int((tf.__version__).split('.')[0]) < 1:
-    init = tf.initialize_all_variables()
-else:
-    init = tf.global_variables_initializer()
+init = tf.global_variables_initializer()
 sess.run(init)
-for i in range(500):
+for i in range(1000):
     # here to determine the keeping probability
     sess.run(train_step, feed_dict={xs: X_train, ys: y_train, keep_prob: 0.5})
     if i % 50 == 0:

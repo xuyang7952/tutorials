@@ -27,6 +27,7 @@ def add_layer(inputs, in_size, out_size, n_layer, activation_function=None):
             outputs = Wx_plus_b
         else:
             outputs = activation_function(Wx_plus_b, )
+        ## histogram 形式的结果
         tf.summary.histogram(layer_name + '/outputs', outputs)
     return outputs
 
@@ -50,6 +51,7 @@ prediction = add_layer(l1, 10, 1, n_layer=2, activation_function=None)
 with tf.name_scope('loss'):
     loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys - prediction),
                                         reduction_indices=[1]))
+    ## 观察loss的变化
     tf.summary.scalar('loss', loss)
 
 with tf.name_scope('train'):
@@ -58,16 +60,18 @@ with tf.name_scope('train'):
 sess = tf.Session()
 merged = tf.summary.merge_all()
 
+# 结果写入文件内，
 writer = tf.summary.FileWriter("logs/", sess.graph)
 
 init = tf.global_variables_initializer()
 sess.run(init)
 
-for i in range(1000):
+for i in range(500):
     sess.run(train_step, feed_dict={xs: x_data, ys: y_data})
     if i % 50 == 0:
         result = sess.run(merged,
                           feed_dict={xs: x_data, ys: y_data})
+        # 中间步骤的结果，保存下来
         writer.add_summary(result, i)
 
 # direct to the local dir and run this in terminal:

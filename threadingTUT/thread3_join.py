@@ -20,8 +20,9 @@ def main():
     thread2 = threading.Thread(target=T2_job, name='T2')
     added_thread.start()
     thread2.start()
+    ## join的作用，join之后的代码会等待join的线程跑完才会执行，可以试试不不加join
     thread2.join()
-    added_thread.join()
+    # added_thread.join()
 
     print('all done\n')
 

@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=False)
 
-
+"""
 # Visualize decoder setting
 # Parameters
 learning_rate = 0.01
@@ -27,7 +27,7 @@ n_input = 784  # MNIST data input (img shape: 28*28)
 # tf Graph input (only pictures)
 X = tf.placeholder("float", [None, n_input])
 
-# hidden layer settings
+# hidden layer settings，先压缩256个，在压缩128，解压为256，在解压784.对比两这的差别
 n_hidden_1 = 256 # 1st layer num features
 n_hidden_2 = 128 # 2nd layer num features
 weights = {
@@ -63,9 +63,9 @@ def decoder(x):
     layer_2 = tf.nn.sigmoid(tf.add(tf.matmul(layer_1, weights['decoder_h2']),
                                    biases['decoder_b2']))
     return layer_2
-
-
 """
+
+
 
 # Visualize encoder setting
 # Parameters
@@ -132,7 +132,6 @@ def decoder(x):
     layer_4 = tf.nn.sigmoid(tf.add(tf.matmul(layer_3, weights['decoder_h4']),
                                 biases['decoder_b4']))
     return layer_4
-"""
 
 # Construct model
 encoder_op = encoder(X)
@@ -173,17 +172,17 @@ with tf.Session() as sess:
     print("Optimization Finished!")
 
     # # Applying encode and decode over test set
-    encode_decode = sess.run(
-        y_pred, feed_dict={X: mnist.test.images[:examples_to_show]})
-    # Compare original images with their reconstructions
-    f, a = plt.subplots(2, 10, figsize=(10, 2))
-    for i in range(examples_to_show):
-        a[0][i].imshow(np.reshape(mnist.test.images[i], (28, 28)))
-        a[1][i].imshow(np.reshape(encode_decode[i], (28, 28)))
-    plt.show()
-
-    # encoder_result = sess.run(encoder_op, feed_dict={X: mnist.test.images})
-    # plt.scatter(encoder_result[:, 0], encoder_result[:, 1], c=mnist.test.labels)
-    # plt.colorbar()
+    # encode_decode = sess.run(
+    #     y_pred, feed_dict={X: mnist.test.images[:examples_to_show]})
+    # # Compare original images with their reconstructions
+    # f, a = plt.subplots(2, 10, figsize=(10, 2))
+    # for i in range(examples_to_show):
+    #     a[0][i].imshow(np.reshape(mnist.test.images[i], (28, 28)))
+    #     a[1][i].imshow(np.reshape(encode_decode[i], (28, 28)))
     # plt.show()
+
+    encoder_result = sess.run(encoder_op, feed_dict={X: mnist.test.images})
+    plt.scatter(encoder_result[:, 0], encoder_result[:, 1], c=mnist.test.labels)
+    plt.colorbar()
+    plt.show()
 

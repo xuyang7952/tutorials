@@ -5,6 +5,7 @@
 from __future__ import print_function
 import tensorflow as tf
 
+
 class TrainConfig:
     batch_size = 20
     time_steps = 20
@@ -66,7 +67,7 @@ class RNN(object):
                 bo = self._bias_variable((self._output_size,))
                 product = tf.matmul(cell_outputs_reshaped, Wo) + bo
                 # _pred shape (batch*time_step, output_size)
-                self._pred = tf.nn.relu(product)    # for displacement
+                self._pred = tf.nn.relu(product)  # for displacement
 
         with tf.name_scope('cost'):
             _pred = tf.reshape(self._pred, [self._batch_size, self._time_steps, self._output_size])
@@ -99,16 +100,17 @@ if __name__ == '__main__':
     train_config = TrainConfig()
     test_config = TestConfig()
 
-    # the wrong method to reuse parameters in train rnn
+    # the wrong method to reuse parameters in train rnn，错误的示例
     with tf.variable_scope('train_rnn'):
         train_rnn1 = RNN(train_config)
     with tf.variable_scope('test_rnn'):
         test_rnn1 = RNN(test_config)
 
-    # the right method to reuse parameters in train rnn
+    # the right method to reuse parameters in train rnn，正确的
     with tf.variable_scope('rnn') as scope:
         sess = tf.Session()
         train_rnn2 = RNN(train_config)
+        ## 声明参数可以复用
         scope.reuse_variables()
         test_rnn2 = RNN(test_config)
         # tf.initialize_all_variables() no long valid from

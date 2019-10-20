@@ -35,10 +35,10 @@ def compute_accuracy(v_xs, v_ys):
 xs = tf.placeholder(tf.float32, [None, 784]) # 28x28
 ys = tf.placeholder(tf.float32, [None, 10])
 
-# add output layer
+# add output layer，只有两层（输入，输出）的网络，分类算法的激活函数
 prediction = add_layer(xs, 784, 10,  activation_function=tf.nn.softmax)
 
-# the error between prediction and real data
+# the error between prediction and real data，分类的误差，loss
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(ys * tf.log(prediction),
                                               reduction_indices=[1]))       # loss
 train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
@@ -47,14 +47,12 @@ sess = tf.Session()
 # important step
 # tf.initialize_all_variables() no long valid from
 # 2017-03-02 if using tensorflow >= 0.12
-if int((tf.__version__).split('.')[1]) < 12 and int((tf.__version__).split('.')[0]) < 1:
-    init = tf.initialize_all_variables()
-else:
-    init = tf.global_variables_initializer()
+
+init = tf.global_variables_initializer()
 sess.run(init)
 
 for i in range(1000):
-    batch_xs, batch_ys = mnist.train.next_batch(100)
+    batch_xs, batch_ys = mnist.train.next_batch(1000)
     sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys})
     if i % 50 == 0:
         print(compute_accuracy(

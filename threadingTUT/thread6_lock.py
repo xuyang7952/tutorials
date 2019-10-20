@@ -5,13 +5,16 @@
 
 import threading
 
+
 def job1():
     global A, lock
+    ## lock的acquire和release，锁上，和释放
     lock.acquire()
     for i in range(10):
         A += 1
         print('job1', A)
     lock.release()
+
 
 def job2():
     global A, lock
@@ -21,7 +24,9 @@ def job2():
         print('job2', A)
     lock.release()
 
+
 if __name__ == '__main__':
+    ## 锁，
     lock = threading.Lock()
     A = 0
     t1 = threading.Thread(target=job1)
